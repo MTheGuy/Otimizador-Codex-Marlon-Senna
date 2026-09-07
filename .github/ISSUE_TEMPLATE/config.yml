@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Segurança
+    url: https://github.com/MTheGuy/Otimizador-Codex-Marlon-Senna/security/policy
+    about: Consulte a política de segurança antes de relatar uma vulnerabilidade.

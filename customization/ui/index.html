@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Personalizar aplicativo</title>
+  <link rel="stylesheet" href="app.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header><div class="brand-mark" aria-hidden="true">↗</div><div><span class="eyebrow">SEU APLICATIVO</span><h1>Personalizar aplicativo</h1></div><span class="local-badge">Somente neste computador</span></header>
+  <main>
+    <section class="editor">
+      <div class="intro"><h2>Uma identidade, em todos os lugares.</h2><p>Escolha o nome, as imagens e os dados da sua distribuição. O aplicativo, a extensão e o instalador usam a mesma configuração.</p></div>
+      <form id="config-form">
+        <fieldset><legend>Identidade</legend>
+          <label>Nome do aplicativo<input name="name" required maxlength="75"></label>
+          <div class="row"><label>Nome curto<input name="shortName" required maxlength="32"></label><label>Versão<input name="version" required placeholder="1.0.0"></label></div>
+          <label>Descrição<textarea name="description" rows="2" required maxlength="300"></textarea></label>
+          <div class="row"><label>Autor ou equipe<input name="author" required maxlength="75"></label><label>Cor de destaque<input name="theme.accent" type="color"></label></div>
+        </fieldset>
+        <fieldset><legend>Imagens</legend><p class="hint">PNG, JPEG ou WebP, até 4 MB. Sem uma imagem, usamos uma marca neutra. Logo e extensão herdam o ícone quando vazios.</p>
+          <div class="assets">
+            <label class="asset"><span>Ícone do aplicativo</span><img id="preview-icon" alt="Prévia do ícone" hidden><input type="file" data-asset="icon" accept="image/png,image/jpeg,image/webp"><input name="icon" type="hidden"><small id="path-icon">Marca padrão</small><button type="button" class="text-button" data-clear="icon">Usar padrão</button></label>
+            <label class="asset"><span>Logo</span><img id="preview-logo" alt="Prévia do logo" hidden><input type="file" data-asset="logo" accept="image/png,image/jpeg,image/webp"><input name="logo" type="hidden"><small id="path-logo">Herdar ícone</small><button type="button" class="text-button" data-clear="logo">Herdar ícone</button></label>
+            <label class="asset"><span>Ícone da extensão</span><img id="preview-extensionIcon" alt="Prévia da extensão" hidden><input type="file" data-asset="extensionIcon" accept="image/png,image/jpeg,image/webp"><input name="extensionIcon" type="hidden"><small id="path-extensionIcon">Herdar ícone</small><button type="button" class="text-button" data-clear="extensionIcon">Herdar ícone</button></label>
+          </div>
+        </fieldset>
+        <details><summary>Extensão e nomes da distribuição</summary><div class="details-body">
+          <label>Nome da extensão<input name="extensionName" required maxlength="75"></label>
+          <label>Descrição da extensão<textarea name="extensionDescription" rows="2" required maxlength="132"></textarea></label>
+          <label>Nome do atalho<input name="shortcutName" required maxlength="75"></label>
+          <div class="row"><label>Nome do executável<input name="executableName" required></label><label>Prefixo do instalador<input name="installerPrefix" required></label></div>
+          <div class="row"><label>Identificador do aplicativo<input name="appId" required></label><label>Nome do pacote<input name="packageName" required></label></div>
+          <p class="hint">O identificador e o nome do pacote distinguem esta instalação e seus dados. Mantenha-os estáveis nas próximas versões.</p>
+        </div></details>
+        <details><summary>Links e publicação</summary><div class="details-body">
+          <label>Página do aplicativo <span class="optional">opcional</span><input name="homepageUrl" type="url" placeholder="https://"></label>
+          <label>Página de suporte <span class="optional">opcional</span><input name="supportUrl" type="url" placeholder="https://"></label>
+          <label>Página do repositório <span class="optional">opcional</span><input name="repositoryUrl" type="url" placeholder="https://github.com/equipe/projeto"></label>
+          <label>Repositório de publicação <span class="optional">opcional</span><input name="publication.repository" placeholder="equipe/projeto"></label>
+          <p class="hint">Gerar o instalador cria o arquivo localmente. A publicação é uma etapa separada.</p>
+        </div></details>
+        <div class="form-actions"><button type="submit" id="save-button">Salvar configuração</button><button type="button" id="template-button" class="secondary">Usar modelo neutro</button></div>
+      </form>
+    </section>
+    <aside>
+      <section class="preview-card"><span class="eyebrow">SUA DISTRIBUIÇÃO</span><div class="preview-mark" id="preview-mark">↗</div><h2 id="app-name">Carregando…</h2><p id="app-description"></p><span id="app-version" class="version"></span></section>
+      <section class="build-card"><h2>Pronto para instalar</h2><p>Crie o instalador Windows x64 com a configuração salva.</p><div class="artifact" id="installer-name"></div><button type="button" id="doctor-button" class="secondary">Verificar projeto</button><button type="button" id="build-button" class="build-button">GERAR INSTALADOR</button><ul id="checks" aria-live="polite"></ul><progress id="build-progress" hidden></progress><p id="build-result"></p></section>
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+      <details id="log-panel" hidden><summary>Mensagens da geração</summary><pre id="build-log"></pre></details>
+    </aside>
+  </main>
+</body>
+</html>

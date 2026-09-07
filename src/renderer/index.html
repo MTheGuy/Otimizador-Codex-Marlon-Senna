@@ -1,0 +1,859 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title data-app-name>Agentes locais</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- Icon sprite. Inline so there is no request and no font, and every glyph
+         inherits currentColor. Stroke-based on a 24 grid; every <use> carries a
+         viewBox or the browser shows the top-left corner of that grid. -->
+    <svg class="sprite" aria-hidden="true">
+      <defs>
+        <!-- The product mark: the same folder-behind-a-message shape as the app and
+             extension icons (scripts/make-icon.mjs), drawn in stroke for this grid. -->
+        <g id="i-mark">
+          <path d="M3.5 8.5V5.5a1 1 0 0 1 1-1h3.1L9 6.4h6.5" />
+          <path
+            d="M5.5 8.5h13a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-8L7 20v-3.5H5.5a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1Z"
+          />
+        </g>
+        <g id="i-bolt"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" /></g>
+        <g id="i-home"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1Z" /></g>
+        <g id="i-steps"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" /></g>
+        <g id="i-pulse"><path d="M3 12h4l3 8 4-16 3 8h4" /></g>
+        <g id="i-folder"><path d="M3 7a1 1 0 0 1 1-1h5l2 2h8a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z" /></g>
+        <g id="i-image"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m4 17 5-5 4 4 3-3 4 4"/></g>
+        <g id="i-plus"><path d="M12 5v14M5 12h14" /></g>
+        <g id="i-eye">
+          <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" />
+          <circle cx="12" cy="12" r="3" />
+        </g>
+        <g id="i-pencil"><path d="M4 20h4L20 8l-4-4L4 16Z" /><path d="M14 6l4 4" /></g>
+        <g id="i-monitor">
+          <rect x="3" y="4" width="18" height="12" rx="1.5" /><path d="M9 20h6M12 16v4" />
+        </g>
+        <g id="i-globe"><circle cx="12" cy="12" r="9" /><ellipse cx="12" cy="12" rx="4" ry="9" /><path d="M3 12h18M5 7h14M5 17h14" /></g>
+        <g id="i-terminal">
+          <rect x="3" y="4" width="18" height="16" rx="2" /><path d="M7 9l3 3-3 3M13 15h4" />
+        </g>
+        <g id="i-power"><path d="M12 4v8" /><path d="M7.5 7a7 7 0 1 0 9 0" /></g>
+        <g id="i-lock">
+          <rect x="4.5" y="10.5" width="15" height="9.5" rx="2" /><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" />
+        </g>
+        <g id="i-copy"><rect x="8.5" y="8.5" width="11" height="11" rx="2" /><path d="M15.5 5.5h-11v11" /></g>
+        <g id="i-retry"><path d="M4 10a8 8 0 1 1 1 8M4 4v6h6" /></g>
+        <g id="i-check"><path d="M5 12.5 10 17.5 19 7" /></g>
+        <g id="i-clock"><circle cx="12" cy="12" r="8" /><path d="M12 7v5l3 2" /></g>
+        <g id="i-chev"><path d="M9.5 5.5 16 12l-6.5 6.5" /></g>
+        <g id="i-out"><path d="M13 5h6v6" /><path d="M19 5 11 13" /><path d="M18 14.5V19H5V6h4.5" /></g>
+        <g id="i-trash">
+          <path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 12.5h9L17.5 7" />
+        </g>
+        <g id="i-x"><path d="M6 6l12 12M18 6 6 18" /></g>
+        <g id="i-ban"><circle cx="12" cy="12" r="8" /><path d="M6.3 6.3 17.7 17.7" /></g>
+        <g id="i-play"><path d="M8 5.5 18.5 12 8 18.5Z" /></g>
+        <g id="i-key"><circle cx="8" cy="12" r="3.5" /><path d="M11.5 12H20M17 12v3M20 12v2.5" /></g>
+        <g id="i-sun">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4" />
+        </g>
+        <g id="i-moon"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" /></g>
+        <g id="i-chat">
+          <path d="M4 5.5h16a1 1 0 0 1 1 1v8.5a1 1 0 0 1-1 1h-8.5L7 19.5V16H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1Z" />
+        </g>
+        <g id="i-search"><circle cx="11" cy="11" r="6" /><path d="M15.4 15.4 20 20" /></g>
+        <g id="i-gear">
+          <circle cx="12" cy="12" r="3" />
+          <polygon points="18.560,9.283 18.918,10.403 20.889,10.592 20.889,13.408 18.918,13.597 18.560,14.717 18.021,15.762 19.281,17.290 17.290,19.281 15.762,18.021 14.717,18.560 13.597,18.918 13.408,20.889 10.592,20.889 10.403,18.918 9.283,18.560 8.238,18.021 6.710,19.281 4.719,17.290 5.979,15.762 5.440,14.717 5.082,13.597 3.111,13.408 3.111,10.592 5.082,10.403 5.440,9.283 5.979,8.238 4.719,6.710 6.710,4.719 8.238,5.979 9.283,5.440 10.403,5.082 10.592,3.111 13.408,3.111 13.597,5.082 14.717,5.440 15.762,5.979 17.290,4.719 19.281,6.710 18.021,8.238" />
+        </g>
+      </defs>
+    </svg>
+
+    <div class="app" data-screen="chat">
+      <aside class="sidebar">
+        <button class="btn" id="backToChat" type="button" hidden>← Voltar à conversa</button>
+        <div class="sidebar-brand"><span class="mark"><svg class="ico" viewBox="0 0 24 24"><use href="#i-mark" /></svg></span><strong data-app-name>Agentes locais</strong></div>
+        <button class="btn new-chat" id="newChat" type="button"><svg class="ico" viewBox="0 0 24 24"><use href="#i-plus" /></svg>Nova conversa</button>
+      <nav id="tabs" aria-label="Navegação das configurações" hidden>
+        <button class="is-sel" data-tab="home" type="button">
+          <svg class="ico" viewBox="0 0 24 24"><use href="#i-home" /></svg>Projetos
+        </button>
+        <button data-tab="usage" type="button"><svg class="ico" viewBox="0 0 24 24"><use href="#i-pulse" /></svg>Uso</button>
+<button data-tab="setup" type="button">
+          <svg class="ico" viewBox="0 0 24 24"><use href="#i-steps" /></svg>Configuração inicial
+          <span class="badge" id="setupBadge" hidden></span>
+        </button>
+        <button data-tab="settings" type="button">
+          <svg class="ico" viewBox="0 0 24 24"><use href="#i-chat" /></svg>Agentes e automação
+        </button>
+        <button data-tab="activity" type="button">
+          <svg class="ico" viewBox="0 0 24 24"><use href="#i-pulse" /></svg>Atividade
+        </button>
+      </nav>          <section class="sidebar-sessions">
+            <h2>
+              Conversas
+              <span class="acts">
+                <button class="btn project-add" id="addProject" type="button" title="Adicionar uma pasta de projeto" aria-label="Adicionar uma pasta de projeto">+</button>
+                <button class="btn" id="chatRefresh" type="button">
+                  <svg class="ico" viewBox="0 0 24 24"><use href="#i-pulse" /></svg>Atualizar
+                </button>
+              </span>
+            </h2>
+            <div class="scroll">
+              <div id="sessionList"></div>
+              <p class="empty" id="sessionsEmpty" hidden>
+                Nenhuma conversa gravada. Ative a gravação nas Configurações, conecte a extensão do Chrome
+                e o histórico aparecerá enquanto você trabalha no ChatGPT.
+              </p>
+            </div>
+            <p class="foot" id="sessionsFoot"></p>
+          </section>
+
+        <div class="sidebar-bottom"><button class="btn" id="workspaceSettings" type="button"><svg class="ico" viewBox="0 0 24 24"><use href="#i-gear" /></svg>Configurações</button><span class="zoom-controls"><button class="btn" id="zoomOut" type="button" aria-label="Diminuir zoom">−</button><button class="btn" id="zoomReset" type="button" title="Restaurar zoom">100%</button><button class="btn" id="zoomIn" type="button" aria-label="Aumentar zoom">+</button></span></div>
+      </aside>
+      <!-- ------------------------------------------------------------ header -->
+      <header>
+        <span id="chatTitle">Nova conversa</span>
+        <span class="mark"><svg class="ico" viewBox="0 0 24 24"><use href="#i-mark" /></svg></span>
+        <span class="title">
+          <span data-app-name>Agentes locais</span>
+          <span id="headerSub">Configuração pendente</span>
+        </span>
+        <span class="state">
+          <button class="btn btn-icon" id="themeBtn" type="button" title="Usar tema escuro">
+            <svg class="ico" viewBox="0 0 24 24"><use href="#i-moon" id="themeIcon" /></svg>
+          </button>
+          <span class="live" id="live">
+            <span class="dot"></span>
+            <span id="liveState">Desconectado</span>
+            <em id="liveNote"></em>
+          </span>
+          <button class="power off" id="connectBtn" type="button">
+            <svg class="ico" viewBox="0 0 24 24"><use href="#i-power" /></svg>
+            <span id="connectLabel">Conectar</span>
+          </button>
+        </span>
+      </header>
+
+
+      <main>
+        <section class="panel usage-panel" data-panel="usage">
+          <div class="settings-heading"><span class="eyebrow">SUA ATIVIDADE</span><h1>Uso</h1><p>Modelos disponíveis e trabalho registrado neste aplicativo.</p></div>
+          <p class="muted usage-status" id="usageStatus" role="status">Calculando o uso registrado das ferramentas…</p><div class="usage-summary" id="usageSummary"></div>
+          <section class="usage-section"><h2>Atividade de tokens por dia</h2><div id="usageHeatmap" class="usage-heatmap"></div><p class="muted">Contexto estimado processado por chamada · últimas 52 semanas</p></section>
+          <section class="usage-section"><h2>Estimativa de custo por dia</h2>
+            <details id="usageFormulaDetails"><summary>Editar fórmula de custo</summary>
+            <p id="usageFormula" class="muted"></p>
+            <p class="muted">As referências automáticas usam preços Standard de entrada em cache para contexto curto, conferidos em 5 de setembro de 2026: <a href="https://developers.openai.com/api/docs/models/gpt-5.6-sol" target="_blank" rel="noopener noreferrer">GPT-5.6 Sol</a>, <a href="https://developers.openai.com/api/docs/models/gpt-6-astra" target="_blank" rel="noopener noreferrer">GPT-6 Astra</a>, <a href="https://developers.openai.com/api/docs/models/gpt-5.5" target="_blank" rel="noopener noreferrer">GPT-5.5</a>. São comparações editáveis de custo, não valores efetivamente cobrados.</p>
+            <label class="setting"><span class="setting-text"><b>Contexto × chamadas únicas de ferramenta, dividido por</b><em>Altera as estimativas de tokens e custos.</em></span><input id="usageDivisor" aria-label="Divisor dos tokens estimados" type="number" min="0.01" step="0.01" value="2" /></label>
+            <label class="setting"><span class="setting-text"><b>Multiplicador do custo de entrada em cache</b><em>Aplicado após a tarifa de entrada em cache de cada modelo.</em></span><input id="usageMultiplier" aria-label="Multiplicador do custo de entrada em cache" type="number" min="0" step="0.01" value="1.2" /></label>
+            <div id="usageRates"></div></details>
+            <p id="usageCost" class="muted">Defina as tarifas de entrada em cache de cada modelo para comparar custos.</p><div id="usageDays"></div>
+          </section>
+          <section class="usage-section"><h2>Uso restante por modelo <button class="btn" id="refreshUsage" type="button">Atualizar</button></h2><p class="muted">Informado pelo ChatGPT. Limites compartilhados e cotas por recurso aparecem separadamente. Dados ausentes não foram informados.</p><div id="modelUsage"></div></section>
+        </section>
+        <!-- ============================================================ Home -->
+        <section class="panel" data-panel="home">
+          <div class="settings-heading"><h1>Projetos e permissões</h1><p>Escolha o que os agentes podem acessar no seu computador.</p></div>
+          <div class="top">
+            <!-- ------------------------------------------------- permissions -->
+            <section class="card">
+              <h2>
+                Permissões
+                <span class="acts">
+                  <button class="btn" id="readOnlyBtn" type="button">
+                    <svg class="ico" viewBox="0 0 24 24"><use href="#i-lock" /></svg>Somente leitura
+                  </button>
+                </span>
+              </h2>
+              <div class="scroll">
+                <div class="security-review" id="securityReview">
+                  <strong>Primeiro uso: revise o acesso</strong>
+                  <p>STRICT é o padrão. Nenhuma pasta está aprovada inicialmente; escolha seus projetos no painel ao lado. Você também pode continuar sem conceder acesso a arquivos.</p>
+                  <button class="btn btn-solid" type="button" id="securityConfirm">Concluir revisão de segurança</button>
+                </div>
+                <div class="security-profile">
+                  <label for="securityProfile">Perfil de segurança</label>
+                  <select id="securityProfile" aria-describedby="securityProfileDetail"></select>
+                  <p id="securityProfileDetail"></p>
+                  <button class="btn" id="securityApply" type="button">Aplicar este perfil</button>
+                  <p class="muted" id="securityCurrent" role="status"></p>
+                </div>
+                <p class="security-scope">Arquivos ficam limitados aos projetos aprovados. Comandos e controle de mouse/teclado usam o acesso real da sua conta no sistema operacional e podem atuar fora desses projetos.</p>
+                <div id="groups"></div>
+                <p class="security-scope">Isolamento da interface, validação de mensagens, proteção de credenciais, limites das pastas e separação entre agentes permanecem ativos em todos os perfis.</p>
+                <div class="desktop-access" id="desktopAccess" hidden>
+                  <strong id="desktopAccessTitle">O acesso ao computador precisa de atenção</strong>
+                  <p id="desktopAccessDetail"></p>
+                  <button class="btn btn-solid" id="requestDesktopAccessibility" type="button">Solicitar Acessibilidade</button>
+                  <button
+                    class="btn"
+                    id="openDesktopScreen"
+                    type="button"
+                    data-link="x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"
+                  >Abrir ajustes de Gravação da Tela</button>
+                  <button
+                    class="btn"
+                    id="openDesktopAccessibility"
+                    type="button"
+                    data-link="x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"
+                  >Abrir ajustes de Acessibilidade</button>
+                </div>
+              </div>
+            </section>
+
+            <!-- ----------------------------------------------------- folders -->
+            <section class="card" id="foldersCard">
+              <h2>
+                Projetos aprovados
+                <span class="acts">
+                  <button class="btn" id="addFolder" type="button">
+                    <svg class="ico" viewBox="0 0 24 24"><use href="#i-plus" /></svg>Adicionar projeto
+                  </button>
+                </span>
+              </h2>
+              <div class="scroll">
+                <div id="rootList"></div>
+                <p class="empty" id="rootsEmpty">
+                  Nenhum projeto aprovado. Clique em Adicionar projeto ou arraste uma pasta aqui.
+                  As ferramentas usam nomes curtos como <code>/project</code>, sem divulgar o caminho real.
+                </p>
+              </div>
+            </section>
+
+            <!-- ------------------------------------------------------ health -->
+            <section class="card">
+              <h2>
+                Diagnóstico
+                <span class="acts">
+                  <button class="btn" id="runChecks" type="button">
+                    <svg class="ico" viewBox="0 0 24 24"><use href="#i-pulse" /></svg>
+                    <span id="runChecksLabel">Executar verificações</span>
+                  </button>
+                </span>
+              </h2>
+              <div class="scroll">
+                <div class="big">
+                  <div><b id="bigHandshake">—</b><span>conexão verificada</span></div>
+                  <div><b id="bigRequest">—</b><span>última chamada do ChatGPT</span></div>
+                </div>
+                <div class="facts" id="facts"></div>
+                <div class="checks" id="checksBox" hidden>
+                  <div class="checks-head">
+                    <strong id="checksSummary"></strong>
+                    <button class="btn btn-quiet" id="closeChecks" type="button">
+                      <svg class="ico" viewBox="0 0 24 24"><use href="#i-x" /></svg>
+                    </button>
+                  </div>
+                  <ul id="checkList"></ul>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- ---------------------------------------------------- activity -->
+          <section class="card">
+            <h2>
+              Atividade
+              <span class="acts">
+                <span class="problems" id="homeProblems" hidden></span>
+                <button class="btn" id="copyLog" type="button">
+                  <svg class="ico" viewBox="0 0 24 24"><use href="#i-copy" /></svg>Copiar
+                </button>
+              </span>
+            </h2>
+            <div class="scroll feed" id="homeFeed"></div>
+          </section>
+        </section>
+
+        <!-- =========================================================== Setup -->
+        <section class="panel scroll" data-panel="setup">
+          <div class="sheet">
+            <div class="settings-heading"><h1>Configuração inicial</h1><p>Conecte seus projetos ao ChatGPT.</p></div>
+            <div class="lede">
+              <p>
+                Seis etapas, uma única vez. Aplicativos MCP personalizados exigem o <strong>Modo de desenvolvedor</strong> do ChatGPT na
+                web. A disponibilidade de escrita e alteração via MCP depende do plano e das permissões da conta;
+                confira as opções efetivamente disponíveis no seu ChatGPT.
+              </p>
+              <button class="btn" id="wizExpand" type="button" hidden>Mostrar todas as etapas</button>
+            </div>
+
+            <ol class="wizard" id="wizard">
+              <!-- 1 -->
+              <li class="step" data-step="folder">
+                <div class="step-mark">
+                  <svg class="ico tick" viewBox="0 0 24 24"><use href="#i-check" /></svg>
+                </div>
+                <div class="step-body">
+                  <h3>Escolha um projeto para compartilhar</h3>
+                  <p>
+                    As ferramentas de arquivos ficam limitadas às pastas aprovadas. Aprove uma pasta se for usar essas ferramentas.
+                    Comandos e controle do computador, se ativados, possuem alcance da sua conta do sistema operacional.
+                  </p>
+                  <div class="step-actions">
+                    <button class="btn btn-solid" id="wizAddFolder" type="button">
+                      <svg class="ico" viewBox="0 0 24 24"><use href="#i-folder" /></svg>Escolher pasta
+                    </button>
+                    <button class="btn" id="wizManageFolders" type="button">Gerenciar projetos</button>
+                    <span class="chosen" id="wizFolders">Nenhum ainda</span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- 2 -->
+              <li class="step" data-step="tunnel">
+                <div class="step-mark">
+                  <svg class="ico tick" viewBox="0 0 24 24"><use href="#i-check" /></svg>
+                </div>
+                <div class="step-body">
+                  <h3>Crie um túnel</h3>
+                  <p>
+                    Abra <strong>Tunnels</strong> na plataforma OpenAI e crie um túnel. Selecione o
+                    <strong>mesmo espaço de trabalho usado no ChatGPT</strong> — um túnel de outro
+                    espaço de trabalho não aparecerá depois. Copie o identificador.
+                  </p>
+                  <div class="step-actions">
+                    <button
+                      class="btn btn-solid"
+                      type="button"
+                      data-link="https://platform.openai.com/settings/organization/tunnels"
+                    >
+                      <svg class="ico" viewBox="0 0 24 24"><use href="#i-out" /></svg>Abrir Tunnels
+                    </button>
+                  </div>
+                  <div class="field">
+                    <label for="tunnelId">Identificador do túnel — conector principal</label>
+                    <input
+                      id="tunnelId"
+                      type="text"
+                      spellcheck="false"
+                      placeholder="tunnel_0123456789abcdef0123456789abcdef"
+                    />
+                  </div>
+                  <!-- Desktop is a second connector in ChatGPT, so on this method it needs a
+                       second tunnel of its own. Hidden unless desktop permissions are on, so
+                       nobody is asked to create a tunnel for a feature they never enabled. -->
+                  <div class="field" id="desktopTunnelField" hidden>
+                    <label for="desktopTunnelId">Identificador do túnel — conector do computador <span class="tag">opcional</span></label>
+                    <input
+                      id="desktopTunnelId"
+                      type="text"
+                      spellcheck="false"
+                      placeholder="tunnel_0123456789abcdef0123456789abcdef"
+                    />
+                    <p class="hint">
+                      A captura de tela e o controle de mouse/teclado usam um conector separado e precisam de um
+                      segundo túnel. Crie outro e cole o identificador aqui. Deixe vazio para
+                      manter esse conector desativado no ChatGPT.
+                    </p>
+                  </div>
+                </div>
+              </li>
+
+              <!-- 3 -->
+              <li class="step" data-step="key">
+                <div class="step-mark">
+                  <svg class="ico tick" viewBox="0 0 24 24"><use href="#i-check" /></svg>
+                </div>
+                <div class="step-body">
+                  <h3>Crie uma chave de API</h3>
+                  <p>
+                    Crie uma chave do tipo <strong>Restricted</strong> e conceda apenas
+                    <strong>Tunnels: Read</strong> e <strong>Tunnels: Use</strong>. Deixe
+                    as demais permissões em <em>None</em>. Copie a chave — a plataforma não a mostrará
+                    novamente.
+                  </p>
+                  <div class="step-actions">
+                    <button
+                      class="btn btn-solid"
+                      type="button"
+                      data-link="https://platform.openai.com/settings/organization/api-keys"
+                    >
+                      <svg class="ico" viewBox="0 0 24 24"><use href="#i-out" /></svg>Abrir chaves de API
+                    </button>
+                  </div>
+                  <div class="field">
+                    <label for="apiKey">Chave de API do túnel</label>
+                    <input id="apiKey" type="password" spellcheck="false" placeholder="sk-…" autocomplete="off" />
+                    <p class="hint" id="apiKeyState"></p>
+                    <div class="step-actions">
+                      <button class="btn" id="removeApiKey" type="button">Remover chave de API salva</button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+              <!-- 4 -->
+              <li class="step" data-step="connect">
+                <div class="step-mark">
+                  <svg class="ico tick" viewBox="0 0 24 24"><use href="#i-check" /></svg>
+                </div>
+                <div class="step-body">
+                  <h3>Inicie o túnel</h3>
+                  <p id="backgroundRunningCopy">
+                    Deixe o aplicativo em execução enquanto usa o conector. Ele continua disponível ao fechar
+                    a janela.
+                  </p>
+                  <div class="step-actions">
+                    <button class="btn btn-solid" id="wizConnect" type="button">Conectar</button>
+                    <span class="chosen" id="wizStatus"></span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- 5 -->
+              <li class="step" data-step="chatgpt">
+                <div class="step-mark">
+                  <svg class="ico tick" viewBox="0 0 24 24"><use href="#i-check" /></svg>
+                </div>
+                <div class="step-body">
+                  <h3>Adicione os conectores no ChatGPT</h3>
+                  <p>
+                    Ative o <strong>Modo de desenvolvedor</strong> no ChatGPT, em
+                    <em>Configurações → Aplicativos → Configurações avançadas</em>. Planos gerenciados pelo espaço de trabalho
+                    também podem disponibilizar aplicativos personalizados na área de Aplicativos. Crie um aplicativo para cada cartão
+                    abaixo — o principal e, se desejar, o opcional para o computador. Cada
+                    cartão corresponde a um aplicativo separado no ChatGPT:
+                  </p>
+                  <ul class="ticks">
+                    <li>Copie o nome e a descrição exatos do cartão para identificar corretamente cada conector.</li>
+                    <li id="chatgptConn"></li>
+                    <li>
+                      Na autenticação, vá até o fim e selecione
+                      <strong>No authentication</strong> (sem autenticação). O aplicativo é protegido por um endereço secreto,
+                      não por uma tela de login.
+                    </li>
+                  </ul>
+                  <!-- One card per connector. The name and description are what ChatGPT matches
+                       on when it decides whether to load a connector's tools at all, so both are
+                       given as copyable text rather than described. -->
+                  <div class="connectors" id="connectorCards"></div>
+                  <div class="plugin-permission-step">
+                    <strong>Antes de começar: revise as permissões no ChatGPT</strong>
+                    <p>No ChatGPT, abra Configurações → Plugins (ou Aplicativos), selecione este conector e revise as permissões das ações. Faça o mesmo com o conector do computador, caso o tenha adicionado.</p>
+                    <p>A opção “Allow all actions” permite executar ações sem confirmação a cada chamada. Escolha-a somente se desejar esse comportamento; confirmações podem pausar automações. As permissões deste aplicativo continuam sendo aplicadas.</p>
+                  </div>
+                  <div class="step-actions">
+                    <button class="btn btn-solid" type="button" data-link="https://chatgpt.com/#settings/Apps">
+                      <svg class="ico" viewBox="0 0 24 24"><use href="#i-out" /></svg>Abrir Aplicativos
+                    </button>
+                    <span class="chosen" id="wizChatgpt"></span>
+                  </div>
+                </div>
+              </li>
+
+              <!-- 6 -->
+              <!--
+                The extension is setup, not settings. It is what lets this app see which chat a
+                tool call came from, so the timeline, Compact & resume and sub-agents are all
+                dark without it — which made "buried in a settings pane behind a gear" exactly
+                the wrong place for the one-time instructions.
+              -->
+              <li class="step" data-step="browser">
+                <div class="step-mark">
+                  <svg class="ico tick" viewBox="0 0 24 24"><use href="#i-check" /></svg>
+                </div>
+                <div class="step-body">
+                  <h3>Adicione a extensão do Chrome</h3>
+                  <p>
+                    Abra <code>chrome://extensions</code> e ative o <strong>Modo do desenvolvedor</strong>.
+                    Escolha <strong>Carregar sem compactação</strong> e selecione a pasta aberta pelo botão. A extensão
+                    conecta-se automaticamente ao aplicativo — não é preciso digitar um código.
+                  </p>
+                  <p class="hint is-required">
+                    <strong>Necessário para subagentes:</strong> a extensão precisa estar carregada
+                    e conectada ao ChatGPT. Sem ela, <span data-app-name>o aplicativo</span> não consegue identificar,
+                    abrir ou coordenar as conversas dos agentes.
+                  </p>
+                  <div class="step-actions">
+                    <button class="btn btn-solid" id="bridgeFolder" type="button">
+                      <svg class="ico" viewBox="0 0 24 24"><use href="#i-folder" /></svg>Abrir pasta da extensão
+                    </button>
+                    <button
+                      class="btn"
+                      id="bridgeDownload"
+                      type="button"
+                    >
+                      <svg class="ico" viewBox="0 0 24 24"><use href="#i-out" /></svg>Baixar ZIP da extensão
+                    </button>
+                    <button class="btn" id="bridgeUnpair" type="button">Desconectar navegador</button>
+                    <span class="chosen" id="bridgeState"></span>
+                  </div>
+                  <p class="hint" id="extensionPath"></p>
+                </div>
+              </li>
+            </ol>
+
+            <details class="advanced">
+              <summary>
+                <svg class="ico sum-chev" viewBox="0 0 24 24"><use href="#i-chev" /></svg>
+                Avançado — método, programa e inicialização
+              </summary>
+
+              <div class="field">
+                <label for="tunnelKind">Método</label>
+                <select id="tunnelKind">
+                  <option value="openai">OpenAI Secure MCP Tunnel (recomendado)</option>
+                  <option value="cloudflared">Túnel rápido Cloudflare</option>
+                  <option value="manual">Somente local — usarei meu próprio túnel</option>
+                </select>
+                <p class="hint" id="methodHint"></p>
+              </div>
+
+              <div class="field">
+                <label for="binaryPath">Programa do túnel</label>
+                <div class="row-inline">
+                  <input id="binaryPath" type="text" spellcheck="false" placeholder="Incluído neste aplicativo" readonly />
+                  <button class="btn btn-solid" id="pickBinary" type="button">Procurar…</button>
+                </div>
+                <p class="hint" id="binaryState"></p>
+              </div>
+
+              <div class="field">
+                <label class="inline"><input type="checkbox" id="autoConnect" /> Conectar automaticamente ao iniciar</label>
+                <label class="inline"><input type="checkbox" id="minimizeToTray" /> <span id="minimizeToTrayCopy">Continuar em execução ao fechar</span></label>
+                <label class="inline" id="privacyScreenshotsSetting"><input type="checkbox" id="privacyScreenshots" /> Capturas com mais privacidade: priorizar a janela ativa em vez do monitor inteiro</label>
+                <label class="inline"><input type="checkbox" id="developerMode" /> Modo de desenvolvedor: mostrar limites dos turnos e eventos de recuperação</label>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <!-- ============================================================ Chat -->
+        <section class="panel is-active" data-panel="chat">
+          <!-- --------------------------------------------------- sessions -->
+          <!-- ------------------------------------------------ session body -->
+          <!-- The main session grid keeps transcript scrolling separate from the composer. -->
+          <section class="card is-session">
+            <button id="chatSettingsBtn" type="button" hidden>Configurações da conversa</button>
+            <div class="subhead">
+              <span class="seg" id="chatView" hidden>
+                <button class="is-sel" data-view="timeline" type="button">Linha do tempo</button>
+                <button data-view="compact" type="button">Resumo de continuidade</button>
+              </span>
+              <span class="subhead-note" id="chatState"></span>
+
+            </div>
+
+            <div class="scroll" id="chatBody">
+              <!-- timeline -->
+              <div class="view" data-view="timeline">
+                <!-- Only shown while a multi-agent run has agents in this session. -->
+                <div class="seg" id="chatAgentFilter" hidden></div>
+                <div id="timeline"></div>
+                <div id="inputQueue" class="input-queue" aria-live="polite"></div>
+                <p class="empty" id="timelineEmpty">
+                  <svg class="ico welcome-mark" viewBox="0 0 24 24"><use href="#i-mark" /></svg><span>O que você gostaria de criar?</span>
+                </p>
+              </div>
+
+              <!-- the brief the last compaction left behind -->
+              <div class="view" data-view="compact" hidden>
+                <div class="pane">
+                  <h3 id="handoffHead" hidden>
+                    Último resumo de continuidade
+                    <button class="btn" id="copyHandoff" type="button" hidden>
+                      <svg class="ico" viewBox="0 0 24 24"><use href="#i-copy" /></svg>Copiar
+                    </button>
+                  </h3>
+                  <div id="handoffBox"></div>
+                </div>
+              </div>
+
+              <!--
+                Settings, and only settings that change behaviour.
+
+                Three rows. Everything that used to be explained in six paragraphs here is
+                either a fact about where files go - which belongs in the docs, not in a
+                property sheet - or a threshold that now has exactly one number instead of
+                three overlapping ones. The pairing instructions moved into Setup, where
+                the rest of the once-only work already lives.
+              -->
+              <div class="view" data-view="settings" hidden>
+                <div class="settings-heading"><h1>Agentes e automação</h1><p>Ajuste os projetos e a forma como seus agentes trabalham.</p><label class="sr-only" for="settingsSearch">Pesquisar configurações</label><input id="settingsSearch" type="search" placeholder="Pesquisar configurações…" /></div>
+                <p id="settingsSearchEmpty" class="muted" role="status" hidden>Nenhuma configuração corresponde à pesquisa.</p>
+                <h2 class="settings-section-title">Aparência</h2>
+                <div class="pane">
+                  <label class="setting" for="displayName"><span class="setting-text"><b>Nome exibido no aplicativo</b><em>Personalize o título para seu uso. Isso não altera projetos, permissões, arquivos ou a identificação técnica da instalação.</em></span></label>
+                  <input id="displayName" type="text" maxlength="120" autocomplete="off" aria-label="Nome exibido no aplicativo" />
+                  <button class="btn" id="resetDisplayName" type="button">Restaurar nome padrão</button>
+                </div>
+                <h2 class="settings-section-title">Fontes de continuidade</h2>
+                <div class="pane">
+                  <div class="setting"><span class="setting-text"><b>Fonte das respostas de objetivo</b><em>A API é a opção mais confiável. O modo offline usa marcadores de conclusão e 200 mensagens preparadas.</em></span><select id="goalBackend"><option value="api">Chave de API · mais confiável</option><option value="chatgpt">Conversa separada no ChatGPT</option><option value="templates">Offline · sem custo de API</option></select></div>
+                  <div class="setting"><span class="setting-text"><b>Fonte das respostas de repetição</b><em>O modo de repetição continua até ser desativado.</em></span><select id="loopBackend"><option value="api">Chave de API · mais confiável</option><option value="chatgpt">Conversa separada no ChatGPT</option></select></div>
+                  <div class="setting"><span class="setting-text"><b>Modelo para objetivo, repetição e plano</b><em>Modelo das mensagens e planos produzidos no ChatGPT. Selecione o modelo e o esforço adequados ao seu trabalho.</em></span><select id="helperModel" aria-label="Modelo para objetivo, repetição e plano"></select></div>
+                  <div class="setting"><span class="setting-text"><b>Esforço para objetivo, repetição e plano</b><em>Usado com o modelo do ChatGPT acima; independente do esforço configurado para a API.</em></span><select id="helperReasoning" aria-label="Esforço para objetivo, repetição e plano"></select></div>
+                  <label class="setting"><span class="setting-text"><b>Incluir detalhes das ferramentas nos objetivos e resumos</b><em>Os objetivos recebem argumentos e resultados registrados. Os resumos de continuidade preservam esses detalhes.</em></span><input id="goalIncludeToolCalls" type="checkbox" /></label>
+                  </div>
+                <h2 class="settings-section-title">Manter o turno aberto</h2>
+                <div class="pane">
+                  <label class="setting"><span class="setting-text"><b>Geração de planos</b><em>Crie tarefas em etapas. O ChatGPT usa o modelo configurado acima; a API usa o modelo e esforço das configurações do provedor.</em></span><select id="planBackend"><option value="chatgpt">ChatGPT</option><option value="api">Provedor de API</option></select></label>
+                  <label class="setting"><span class="setting-text"><b>Encerramento da sessão</b><em>Peça ao Astra que mantenha o turno aberto para sua próxima instrução. Alterações nas ferramentas atualizam o conector automaticamente após 20 segundos.</em></span><input id="finishTool" type="checkbox" /></label>
+                  <div class="setting"><span class="setting-text"><b>Quando o ChatGPT estiver concluindo</b><em>As continuações automáticas usam suas instruções e a fonte escolhida para repetição.</em></span><select id="finishAction"><option value="notify">Avisar · escrever ou gerar objetivo</option><option value="goal">Gerar e enviar objetivo</option></select></div>
+                  <div class="setting"><span class="setting-text"><b>Antecedência solicitada</b><em>É um pedido ao modelo, não uma contagem regressiva garantida.</em></span><select id="finishLeadMinutes"><option value="3">3 minutos</option><option value="5">5 minutos</option></select></div>
+                  </div>
+                <h2 class="settings-section-title">Modelos do ChatGPT</h2>
+                <div class="pane">
+                  <div class="setting"><span class="setting-text"><b>Modelos disponíveis no ChatGPT</b><em id="chatModelStatus">Consultar os modelos disponíveis na sua conta.</em></span><button class="btn" id="refreshChatModels" type="button">Atualizar</button></div>
+                  <div class="setting"><span class="setting-text"><b>Modelo padrão dos subagentes</b><em>Confirmado no ChatGPT antes de iniciar um agente executor.</em></span><select id="workerModel"><option value="" disabled>Nenhuma opção identificada</option></select></div>
+                  <div class="setting"><span class="setting-text"><b>Esforço padrão dos subagentes</b><em>Selecionado independentemente do modelo.</em></span><select id="workerReasoning"><option value="" disabled>Nenhuma opção identificada</option></select></div>
+                  </div>
+                <h2 class="settings-section-title">Navegador e histórico</h2>
+                <div class="pane">
+                  <label class="setting"><span class="setting-text"><b>Conversas em segundo plano</b><em>Manter em segundo plano as abas do ChatGPT criadas pelo aplicativo.</em></span><input id="backgroundChats" type="checkbox" /></label>
+                  <p class="muted">Mantém tantas abas quanto o limite de agentes executores. Acima disso, as mais ociosas fecham após um minuto sem trabalho. Turnos ativos e rascunhos não enviados permanecem abertos.</p>
+                  <label class="setting"><span class="setting-text"><b>Substituir linhas de ferramentas no ChatGPT</b><em>Mostrar a atividade local registrada na página do ChatGPT.</em></span><input id="browserOverwrite" type="checkbox" disabled /></label>
+                  <label class="setting"><span class="setting-text"><b>Mostrar durações no ChatGPT</b><em>Usa a mesma preferência do painel da extensão.</em></span><input id="browserDurations" type="checkbox" disabled /></label>
+                  <div class="setting"><span class="setting-text"><b>Preferências do navegador</b><em id="browserPreferencesStatus" role="status">Atualize para consultar as preferências atuais do navegador.</em></span><button id="browserPreferencesRefresh" class="btn" type="button">Atualizar preferências do navegador</button></div>
+                  <div class="setting">
+                    <span class="setting-text">
+                      <b>Manter gravações</b>
+                      <em>Depois desse período, excluir as gravações. 0 mantém tudo. A gravação também depende de permissão.</em>
+                    </span>
+                    <input id="sessRetain" class="num" type="number" min="0" max="3650" step="1" />
+                    <span class="unit">dias</span>
+                  </div>
+                  <div class="setting">
+                    <span class="setting-text">
+                      <b>Compactar automaticamente</b>
+                      <em id="autoCompactHint"></em>
+                    </span>
+                    <input id="autoCompactTokens" class="num" type="number" min="10000" max="4000000" step="10000" />
+                    <span class="unit">tokens</span>
+                    <span class="sw"><input type="checkbox" id="autoCompact" /><i></i></span>
+                  </div>
+                  </div>
+                <h2 class="settings-section-title">Provedor de API</h2>
+                <div class="pane">
+                  <div class="field">
+                    <label for="goalKey">Chave de API OpenRouter</label>
+                    <input id="goalKey" type="password" spellcheck="false" placeholder="sk-or-v1-…" autocomplete="off" />
+                    <p class="hint" id="goalKeyState"></p>
+                    <div class="step-actions">
+                      <button class="btn" id="goalKeyRemove" type="button">Remover chave salva</button>
+                      <button class="btn" type="button" data-link="https://openrouter.ai/settings/keys">
+                        <svg class="ico" viewBox="0 0 24 24"><use href="#i-out" /></svg>Abrir chaves OpenRouter
+                      </button>
+                    </div>
+                  </div>
+                  <div class="setting">
+                    <span class="setting-text">
+                      <b>Modelo</b>
+                      <em id="goalModelName"></em>
+                    </span>
+                    <button class="btn" id="goalPick" type="button">Selecionar modelo</button>
+                  </div>
+
+                  <div class="field" id="goalModels" hidden>
+                    <div id="goalModelList" class="goal-models"></div>
+                    <p class="hint" id="goalModelsState"></p>
+                    <div class="step-actions">
+                      <button class="btn" id="goalMore" type="button">Carregar mais 20</button>
+                    </div>
+                  </div>
+
+                  <div class="setting">
+                    <span class="setting-text">
+                      <b>Esforço de raciocínio</b>
+                      <em>Padrão deixa o provedor decidir. Níveis maiores podem aumentar o custo e o tempo de resposta.</em>
+                    </span>
+                    <select id="goalReasoning">
+                      <option value="default">Padrão</option>
+                      <option value="minimal">Mínimo</option>
+                      <option value="low">Baixo</option>
+                      <option value="medium">Médio</option>
+                      <option value="high">Alto</option>
+                    </select>
+                  </div>
+
+                  </div>
+                <h2 class="settings-section-title">Instruções de continuidade</h2>
+                <div class="pane">
+                  <div class="setting">
+                    <span class="setting-text">
+                      <b>Instrução de objetivo, sem tarefa definida</b>
+                      <em>Identifica o objetivo nas suas mensagens e para quando ele for concluído.</em>
+                    </span>
+                    <button class="btn" id="goalPromptEdit" type="button">Editar instrução</button>
+                  </div>
+
+                  <div class="field goal-prompt" id="goalPromptPanel" hidden>
+                    <label for="goalPrompt">Instrução de objetivo, sem tarefa definida</label>
+                    <textarea id="goalPrompt" rows="14" spellcheck="false"></textarea>
+                    <p class="hint">Salvo ao sair do editor. Preserve <code>NO_REPLY</code> como resposta exata de encerramento.</p>
+                    <div class="step-actions">
+                      <button class="btn" id="goalPromptReset" type="button">Restaurar padrão</button>
+                    </div>
+                  </div>
+
+                  <div class="setting">
+                    <span class="setting-text">
+                      <b>Instrução de objetivo, com tarefa definida</b>
+                      <em>Usa o objetivo salvo nos controles da conversa. Para quando todos os requisitos forem atendidos.</em>
+                    </span>
+                    <button class="btn" id="goalObjectivePromptEdit" type="button">Editar instrução</button>
+                  </div>
+
+                  <div class="field goal-prompt" id="goalObjectivePromptPanel" hidden>
+                    <label for="goalObjectivePrompt">Instrução de objetivo, com tarefa definida</label>
+                    <textarea id="goalObjectivePrompt" rows="14" spellcheck="false"></textarea>
+                    <p class="hint">Salvo ao sair do editor. Preserve <code>NO_REPLY</code> como resposta exata de encerramento.</p>
+                    <div class="step-actions">
+                      <button class="btn" id="goalObjectivePromptReset" type="button">Restaurar padrão</button>
+                    </div>
+                  </div>
+
+                  <div class="setting">
+                    <span class="setting-text">
+                      <b>Instrução de repetição</b>
+                      <em>Escreve a próxima instrução após cada resposta, até você desativar a repetição.</em>
+                    </span>
+                    <button class="btn" id="goalLoopPromptEdit" type="button">Editar instrução</button>
+                  </div>
+
+                  <div class="field goal-prompt" id="goalLoopPromptPanel" hidden>
+                    <label for="goalLoopPrompt">Instrução de repetição</label>
+                    <textarea id="goalLoopPrompt" rows="14" spellcheck="false"></textarea>
+                    <p class="hint">Salvo ao sair do editor. Neste modo não há resposta de encerramento: o aplicativo a recusa e solicita outra instrução.</p>
+                    <div class="step-actions">
+                      <button class="btn" id="goalLoopPromptReset" type="button">Restaurar padrão</button>
+                    </div>
+                  </div>
+
+                  </div>
+                <h2 class="settings-section-title">Agentes executores e recuperação</h2>
+                <div class="pane">
+                  <div class="setting">
+                    <span class="setting-text">
+                      <b>Limite de agentes executores</b>
+                      <em>Exige a extensão do Chrome carregada e conectada. Define o máximo de conversas de agentes executores que uma execução pode abrir.</em>
+                    </span>
+                    <input id="maWorkers" class="num" type="number" min="1" max="8" step="1" />
+                    <span class="unit">máx.</span>
+                  </div>
+
+                  <input id="allowUnattributedCalls" type="checkbox" hidden disabled />
+                  <p class="muted">Chamadas sem identidade comprovada ficam bloqueadas. Essa proteção não pode ser desligada.</p>
+
+                  <label class="setting">
+                    <span class="setting-text">
+                      <b>Recuperar abas de outras conversas</b>
+                      <em>Restaurar conversas de trabalho ausentes ou sem resposta. Conversas com objetivo ou repetição são recuperadas automaticamente.</em>
+                    </span>
+                    <input id="recoverAgentTabs" type="checkbox" />
+                  </label>
+
+                  <div id="swarmList"></div>
+                  <div class="step-actions">
+                    <button class="btn" id="swarmReset" type="button">Limpar grupo de agentes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="composer-dock" id="composerDock"><div id="recoveryStatus" role="status" hidden></div><div id="taskPlanPreview" aria-label="Etapas do plano" hidden></div><div id="finishQueue" aria-label="Tarefas na fila" hidden></div><div id="activeGoalRow" hidden></div></div>
+            <form class="composer" id="composer">
+              <label class="sr-only" for="chatInput">Mensagem para o ChatGPT</label>
+              <div id="composerImages" class="composer-images" hidden></div><textarea id="chatInput" rows="1" maxlength="16000" placeholder="Escreva sua mensagem…"></textarea>
+              <div class="composer-toolbar">
+                <details class="composer-menu" id="attachmentMenu">
+                  <summary aria-label="Adicionar anexos" title="Adicionar anexos"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plus" /></svg></summary>
+                  <div class="composer-popover">
+                    <button id="attachImages" type="button"><svg class="ico" viewBox="0 0 24 24"><use href="#i-image" /></svg>Adicionar imagens</button>
+                    <button id="composerFolder" type="button"><svg class="ico" viewBox="0 0 24 24"><use href="#i-folder" /></svg>Compartilhar pasta</button>
+                  </div>
+                </details>
+                <div class="composer-options">
+                  <details class="composer-menu" id="composerSettings">
+                    <summary aria-label="Opções da conversa" title="Opções da conversa"><svg class="ico" viewBox="0 0 24 24"><use href="#i-gear" /></svg></summary>
+                    <div class="composer-popover">
+                      <div class="automation-switch" id="automationSwitch" role="radiogroup" aria-label="Modo da conversa">
+                        <button type="button" role="radio" aria-checked="true" data-mode="off" data-keep-menu="true">Desativado</button>
+                        <button type="button" role="radio" aria-checked="false" data-mode="goal" data-keep-menu="true">Objetivo</button>
+                        <button type="button" role="radio" aria-checked="false" data-mode="loop" data-keep-menu="true">Repetição</button>
+                        </div><select hidden id="chatAutomation" aria-label="Automação da conversa"><option value="off">Desativado</option><option value="goal">Objetivo</option><option value="loop">Repetição</option></select>
+              <div id="sessionControls" hidden>
+                <div class="session-controls-menu">
+                  <label for="sessionObjective">Objetivo desta conversa</label>
+                  <textarea id="sessionObjective" rows="3" maxlength="16000" placeholder="O que esta conversa deve realizar?"></textarea>
+                  <button id="saveSessionObjective" data-keep-menu="true" type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check" /></svg><span>Salvar tarefa</span></button>
+                  <select hidden id="sessionObjectiveMode" aria-label="Comportamento do objetivo"><option value="goal">Objetivo · parar ao concluir</option><option value="loop">Repetição · continuar</option></select>
+                  <button id="createPlan" type="button"><svg class="ico" viewBox="0 0 24 24"><use href="#i-chat" /></svg><span>Criar plano</span></button>
+                  <button id="queueAtFinish" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock" /></svg><span>Colocar na fila ao encerrar a sessão</span></button>
+                  <button id="compactSession" type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-copy" /></svg><span>Compactar e continuar</span></button>
+                  <button id="cancelCompaction" type="button" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-x" /></svg><span>Cancelar compactação</span></button>
+                  <p id="sessionControlStatus" role="status"></p>
+                </div>
+              </div>
+                    </div>
+                  </details>
+                <div class="context-meter" id="contextMeter">
+                  <button type="button" id="contextMeterButton" aria-label="Contexto estimado da sessão" aria-expanded="false" aria-controls="contextMeterInfo">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><circle class="context-track" cx="8" cy="8" r="6"/><circle id="contextMeterArc" cx="8" cy="8" r="6" stroke-dasharray="0 37.7"/></svg>
+                  </button>
+                  <div id="contextMeterInfo" role="tooltip">Contexto da sessão · estimativa</div>
+                </div>
+                </div>
+                <details class="composer-menu model-menu" id="modelMenu">
+                  <summary><span id="composerModelLabel">Modelo</span><svg class="ico picker-chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg></summary>
+                  <div class="composer-popover">
+                    <div class="power-header"><div class="power-caption"><strong id="composerPowerTitle">Escolha um nível</strong><span id="composerPowerModel">Modelos identificados</span></div><button class="btn model-reload" id="refreshComposerModels" data-keep-menu="true" type="button" title="Reload Modelos do ChatGPT" aria-label="Reload Modelos do ChatGPT"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M20 12a8 8 0 1 0-2 5M20 7l-3 3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg></button>
+                    </div><p id="composerModelStatus" class="muted" role="status" hidden></p>
+                    <div id="composerModelChoices" role="group" aria-label="Modelo"></div><div id="composerPowerChoices" role="group" aria-label="Esforço de raciocínio"></div><label hidden>Modelo<select id="composerModel" aria-label="Modelo do ChatGPT"><option value="" disabled>Nenhuma opção identificada</option></select></label>
+                    <label hidden>Esforço<select id="composerReasoning" aria-label="Esforço de raciocínio"><option value="" disabled>Nenhuma opção identificada</option></select></label>
+                  </div>
+                </details>
+                <button class="btn" id="generateFinishGoal" type="button" hidden>Gerar objetivo</button>
+                <div class="send-control">
+                  <div class="send-options" id="sendOptions" hidden>
+                    <div class="delivery-choices" role="radiogroup" aria-label="Envio da mensagem">
+                      <button type="button" role="radio" aria-checked="true" data-delivery="auto">Enviar agora<svg class="ico" aria-hidden="true"><use href="#i-check" /></svg></button>
+                      <button type="button" role="radio" aria-checked="false" data-delivery="after-turn"><span id="afterTurnLabel">Após este turno</span><svg class="ico" aria-hidden="true"><use href="#i-check" /></svg></button>
+                    </div>
+                    <select id="sendMode" aria-label="Envio da mensagem" hidden><option value="auto">Enviar</option><option value="after-turn">Após este turno</option></select>
+                  </div>
+                  <button class="send-button" id="chatSend" type="submit" aria-label="Enviar mensagem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></button>
+                </div>
+              </div>
+              <p id="composerStatus" role="status" aria-live="polite"></p>
+            </form>
+            <p class="foot" id="chatFoot" hidden></p>
+          </section>
+        </section>
+
+        <!-- ======================================================== Activity -->
+        <section class="panel" data-panel="activity">
+          <section class="card">
+            <h2>
+              Atividade
+              <span class="acts">
+                <span class="seg" id="logAgentFilter" hidden></span>
+                <span class="seg" id="logFilter">
+                  <button class="is-sel" data-filter="all" type="button">Todos</button>
+                  <button data-filter="bad" type="button">Problemas</button>
+                </span>
+                <span class="problems" id="logProblems" hidden></span>
+                <button class="btn" id="copyLogJson" type="button">
+                  <svg class="ico" viewBox="0 0 24 24"><use href="#i-copy" /></svg>JSON
+                </button>
+                <button class="btn" id="copyLogText" type="button">
+                  <svg class="ico" viewBox="0 0 24 24"><use href="#i-copy" /></svg>Texto
+                </button>
+              </span>
+            </h2>
+            <div class="scroll feed" id="fullFeed"></div>
+            <p class="foot" id="versionLine"></p>
+          </section>
+        </section>
+      </main>
+
+      <!-- --------------------------------------------------------------- nav -->
+
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

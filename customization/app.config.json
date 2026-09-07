@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "name": "Otimizador Codex - Marlon Senna",
+  "shortName": "Otimizador Codex",
+  "description": "Aplicativo local com ferramentas MCP, sessões, workers, continuidade de conversas e controle do desktop com permissões explícitas.",
+  "appId": "com.marlonsenna.otimizadorcodex",
+  "packageName": "otimizador-codex-marlon-senna",
+  "executableName": "Otimizador-Codex-Marlon-Senna",
+  "installerPrefix": "Otimizador-Codex-Marlon-Senna",
+  "shortcutName": "Otimizador Codex - Marlon Senna",
+  "author": "Marlon Senna",
+  "extensionName": "Otimizador Codex - Marlon Senna",
+  "extensionDescription": "Conecta as conversas do ChatGPT ao aplicativo local para registrar sessões, acompanhar ferramentas e continuar o trabalho.",
+  "icon": "",
+  "logo": "",
+  "extensionIcon": "",
+  "homepageUrl": "",
+  "supportUrl": "",
+  "repositoryUrl": "https://github.com/MTheGuy/Otimizador-Codex-Marlon-Senna",
+  "publication": { "repository": "MTheGuy/Otimizador-Codex-Marlon-Senna" },
+  "theme": { "accent": "#2c7be5" }
+}
